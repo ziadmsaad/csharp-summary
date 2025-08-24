@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C# Conditional Statements Summary</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            direction: rtl;
+            text-align: right;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            text-align: right;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+            direction: ltr;
+            display: inline-block;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            border-radius: 4px;
+            direction: ltr;
+            text-align: left;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: right;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 C# Fundamentals: Session 3, Part 12 - Conditional Statements Example 04 [Switch With Goto]</h1>
+<p>أهلاً بيك في ملخص شامل ومفصل لأهم النقط اللي اتكلمنا عنها في السيشن دي، واللي بتركز على استخدام الـ <code>goto</code> statement مع الـ <code>switch</code> في C#، وإزاي ده بيأثر على الـ <code>readability</code> والـ <code>maintainability</code> بتاعة الكود.</p>
+<hr />
+<h2>Introduction to <code>goto</code> Statement</h2>
+<p>الـ <code>goto</code> statement في C# هي <code>control flow statement</code> بتسمحلك تنقل الـ <code>execution</code> بتاع البرنامج لنقطة معينة في الكود اسمها <code>label</code>. يعني كأنك بتقول للبرنامج: 'روح نفذ الكود اللي عند الـ <code>label</code> ده'.</p>
+<p>في السيشن دي، اتكلمنا عن استخدام الـ <code>goto</code> تحديدًا مع الـ <code>switch</code> statement، وده عشان نفهم إزاي ممكن نستخدمها عشان نتجنب تكرار الكود (<code>code duplication</code>) بين الـ <code>cases</code> المختلفة في الـ <code>switch</code>.</p>
+<p>🤔 <strong>Why is this important to know?</strong></p>
+<p>مع إن الـ <code>goto</code> statement مش <code>recommended</code> استخدامها في معظم الأوقات، إلا إن معرفتك بيها مهمة لسببين: أولاً، عشان لو شفتها في كود قديم أو كود كتبه حد تاني، تبقى فاهم إيه اللي بيحصل. ثانيًا، عشان تفهم ليه هي مش <code>recommended</code>، وده بيساعدك تكتب كود أفضل وأكثر <code>readability</code>.</p>
+<hr />
+<h2><code>switch</code> with <code>goto</code> Example: Budget Options</h2>
+<p>المثال اللي اتشرح في السيشن كان عن <code>budget</code> بيدخله اليوزر، وبناءً عليه بنحدد إيه الـ <code>options</code> المتاحة ليه. الـ <code>budget</code> ده بيكون <code>integer</code>.</p>
+<p><strong>الـ Scenario الأصلي (بدون <code>goto</code>):</strong></p>
+<ul>
+<li>لو الـ <code>budget</code> بـ <code>1000</code>، اليوزر عنده <code>Option 1</code>.</li>
+<li>لو الـ <code>budget</code> بـ <code>2000</code>، اليوزر عنده <code>Option 1</code> و <code>Option 2</code>.</li>
+<li>لو الـ <code>budget</code> بـ <code>3000</code>، اليوزر عنده <code>Option 1</code> و <code>Option 2</code> و <code>Option 3</code>.</li>
+</ul>
+<p>لو كتبنا ده بـ <code>switch</code> عادي، هنلاقي إن فيه <code>code duplication</code>، يعني نفس السطور بتتكرر في أكتر من <code>case</code>:</p>
+<p>```csharp
+int budget = int.Parse(Console.ReadLine()); // Assuming valid integer input</p>
+<p>switch (budget)
+{
+    case 1000:
+        Console.WriteLine("Option 1");
+        break;
+    case 2000:
+        Console.WriteLine("Option 1");
+        Console.WriteLine("Option 2");
+        break;
+    case 3000:
+        Console.WriteLine("Option 1");
+        Console.WriteLine("Option 2");
+        Console.WriteLine("Option 3");
+        break;
+}
+```</p>
+<p><strong>استخدام <code>goto</code> لتجنب تكرار الكود:</strong></p>
+<p>الفكرة هنا إن لو اليوزر دخل <code>3000</code>، هو كده كده عنده <code>Option 3</code>، وبعدين عنده نفس الـ <code>options</code> اللي عند <code>2000</code>، واللي هي بدورها عندها نفس الـ <code>options</code> اللي عند <code>1000</code>. فبدل ما نكرر الكود، ممكن نستخدم <code>goto</code> عشان ننط للـ <code>case</code> اللي فيها الكود اللي عايزينه يتنفذ.</p>
+<p>```csharp
+int budget = int.Parse(Console.ReadLine()); // Assuming valid integer input</p>
+<p>switch (budget)
+{
+    case 1000:
+        Console.WriteLine("Option 1");
+        break;
+    case 2000:
+        Console.WriteLine("Option 2");
+        goto case 1000; // Go to case 1000 to print Option 1
+    case 3000:
+        Console.WriteLine("Option 3");
+        goto case 2000; // Go to case 2000 to print Option 2 and then Option 1
+}
+```</p>
+<p><strong>شرح اللي بيحصل:</strong></p>
+<ul>
+<li>لو الـ <code>budget</code> بـ <code>3000</code>:<ol>
+<li>هيطبع <code>"Option 3"</code>.</li>
+<li>هينفذ <code>goto case 2000;</code>، فهينط للـ <code>case 2000</code>.</li>
+<li>في الـ <code>case 2000</code>، هيطبع <code>"Option 2"</code>.</li>
+<li>هينفذ <code>goto case 1000;</code>، فهينط للـ <code>case 1000</code>.</li>
+<li>في الـ <code>case 1000</code>، هيطبع <code>"Option 1"</code>.</li>
+<li>هيلاقي <code>break;</code> في الـ <code>case 1000</code>، فهينهي الـ <code>switch</code>.</li>
+</ol>
+</li>
+</ul>
+<p>النتيجة النهائية هي إنه هيطبع <code>Option 3</code>، <code>Option 2</code>، <code>Option 1</code>، وده نفس الـ <code>output</code> اللي كنا عايزينه من غير تكرار الكود.</p>
+<p>🤔 <strong>Why is this important to know?</strong></p>
+<p>استخدام <code>goto</code> بالشكل ده بيقلل الـ <code>code duplication</code>، وده ممكن يكون مفيد في بعض الـ <code>scenarios</code> المعقدة اللي فيها <code>shared logic</code> بين الـ <code>cases</code>. لكن زي ما هنشوف، ده بيجي على حساب الـ <code>readability</code>.</p>
+<hr />
+<h2>Readability and Maintainability: The "Spaghetti Code" Problem</h2>
+<p>مع إن استخدام <code>goto</code> ممكن يحل مشكلة تكرار الكود في بعض الحالات، إلا إنه بيخلق مشكلة أكبر بكتير وهي الـ <code>readability</code> والـ <code>maintainability</code> بتاعة الكود. لما بتستخدم <code>goto</code>، بتخلي الـ <code>execution flow</code> بتاع البرنامج غير خطي، يعني مش بيمشي بالترتيب الطبيعي من فوق لتحت.</p>
+<p><strong>ليه ده بيعمل مشكلة؟</strong></p>
+<ul>
+<li><strong>صعوبة التتبع (<code>Hard to Follow</code>)</strong>: لما بتقرا كود فيه <code>goto</code>، بتلاقي نفسك بتنط من مكان لمكان في الكود، وده بيخلي تتبع الـ <code>logic</code> صعب جدًا. كأنك بتقرا كتاب وكل شوية حد يقولك: "روح صفحة 50، وبعدين ارجع لصفحة 10، وبعدين روح صفحة 120". ده بيخلي فهم الكود <code>complex</code> ومربك.</li>
+<li><strong>"Spaghetti Code"</strong>: المصطلح ده بيستخدم لوصف الكود اللي بيكون فيه <code>control flow</code> متشابك ومعقد بسبب استخدام <code>goto</code> بشكل مفرط. الكود بيبقى عامل زي طبق المكرونة الاسباجتي، كله داخل في بعضه وصعب تفككه.</li>
+<li><strong>صعوبة الـ <code>Debugging</code></strong>: لما الكود بيكون صعب تتبعه، بيكون أصعب إنك تلاقي الـ <code>bugs</code> وتصلحها. الـ <code>unexpected jumps</code> ممكن تؤدي لـ <code>errors</code> مش سهلة الاكتشاف.</li>
+<li><strong>صعوبة الـ <code>Maintenance</code></strong>: تعديل الكود اللي فيه <code>goto</code> بيكون <code>risky</code> جدًا، لأن أي تغيير بسيط ممكن يؤثر على أماكن تانية في الكود بطرق غير متوقعة بسبب الـ <code>jumps</code>.</li>
+</ul>
+<p>🤔 <strong>Why is this important to know?</strong></p>
+<p>النقطة دي هي السبب الرئيسي اللي بيخلي الـ <code>goto</code> statement <code>discouraged</code> في البرمجة الحديثة. الـ <code>best practices</code> في البرمجة بتركز على كتابة كود <code>clean</code>، <code>readable</code>، و <code>maintainable</code>. عشان كده، دايماً بنفضل نستخدم <code>loops</code> (<code>for</code>, <code>while</code>, <code>do-while</code>) و <code>functions</code> و <code>structured control flow statements</code> (زي <code>if-else if</code> و <code>switch</code> بشكلها العادي) عشان ننظم الكود بتاعنا ونخليه سهل الفهم والتعديل.</p>
+<hr />
+<h2><code>goto</code> Outside <code>switch</code></h2>
+<p>الـ <code>goto</code> statement مش مقتصرة على استخدامها داخل الـ <code>switch</code> statement بس. ممكن تستخدمها في أي مكان في الكود عشان تنط لـ <code>label</code> معين. المثال اللي اتشرح في السيشن كان عن <code>input validation</code>.</p>
+<p><strong>مثال عملي:</strong></p>
+<p>لو عايز تطلب من اليوزر يدخل اسمه، ولو الاسم ده كان <code>"Hamada"</code>، تطلب منه يدخل الاسم تاني، ممكن تعمل كده:</p>
+<p>```csharp
+Console.WriteLine("Hello Hamada"); // This line might be somewhere else in the code</p>
+<p>RetryInput:
+Console.Write("Please enter your name: ");
+string name = Console.ReadLine();</p>
+<p>if (name == "Hamada")
+{
+    goto RetryInput; // If name is "Hamada", go back to RetryInput label
+}</p>
+<p>Console.WriteLine($"Hello {name}");
+```</p>
+<p><strong>شرح اللي بيحصل:</strong></p>
+<ol>
+<li>البرنامج هيطبع <code>"Hello Hamada"</code> (السطر ده ممكن يكون في أي حتة في الكود، مش لازم يكون قبله مباشرة).</li>
+<li>هيلاقي الـ <code>label</code> اللي اسمه <code>RetryInput:</code>.</li>
+<li>هيطلب من اليوزر يدخل اسمه.</li>
+<li>لو اليوزر دخل <code>"Hamada"</code>، الـ <code>if</code> condition هتكون <code>true</code>، وهينفذ <code>goto RetryInput;</code>، فهينط تاني للـ <code>label</code> اللي اسمه <code>RetryInput</code>، ويطلب من اليوزر يدخل اسمه من جديد.</li>
+<li>الـ <code>loop</code> ده هيفضل شغال لحد ما اليوزر يدخل اسم غير <code>"Hamada"</code>.</li>
+<li>لما اليوزر يدخل اسم غير <code>"Hamada"</code>، الـ <code>if</code> condition هتكون <code>false</code>، وهيكمل عادي ويطبع <code>"Hello [اسم اليوزر]"</code>.</li>
+</ol>
+<p>🤔 <strong>Why is this important to know?</strong></p>
+<p>المثال ده بيوضح خطورة استخدام <code>goto</code> خارج الـ <code>switch</code>، خصوصًا في حالات الـ <code>looping</code> أو الـ <code>input validation</code>. مع إنها ممكن تبدو كحل سريع، إلا إنها بتخلي الكود صعب جدًا في الفهم والـ <code>debugging</code>. في C#، فيه <code>constructs</code> أفضل بكتير للـ <code>looping</code> زي <code>while</code> أو <code>do-while</code> loops، واللي بتخلي الكود بتاعك <code>structured</code> و <code>readable</code> أكتر بكتير.</p>
+<hr />
+<h2>Conclusion and Recommendation</h2>
+<p>الـ <code>goto</code> statement هي أداة قوية في C#، لكنها زي السلاح ذو الحدين. ممكن تستخدمها عشان تحل مشاكل معينة زي الـ <code>code duplication</code> في الـ <code>switch</code> statement، لكن استخدامها المفرط أو غير المدروس بيؤدي لـ <code>spaghetti code</code> صعب الفهم والـ <code>maintenance</code>.</p>
+<p><strong>الخلاصة:</strong></p>
+<ul>
+<li><strong>تجنب استخدام <code>goto</code> قدر الإمكان.</strong> دايماً فيه بدائل أفضل وأكثر <code>readability</code> زي الـ <code>loops</code>، الـ <code>functions</code>، والـ <code>structured control flow statements</code>.</li>
+<li><strong>لو شفتها في كود، افهمها.</strong> معرفتك بيها مهمة عشان تقدر تقرا وتفهم الأكواد القديمة أو الأكواد اللي كتبها غيرك.</li>
+<li><strong>استخدمها بحذر شديد وفي أضيق الحدود.</strong> لو لقيت نفسك مضطر تستخدمها، فكر كويس جداً هل مفيش حل تاني أفضل.</li>
+</ul>
+<p><strong>نصيحة إضافية:</strong></p>
+<p>المحاضر نصح إننا نعمل <code>search</code> أكتر عن الـ <code>Jump Table</code> والـ <code>Hash Table</code> وإزاي الـ <code>switch</code> بتشتغل مع الـ <code>string</code>. دي نقط مهمة جداً عشان تفهم الـ <code>performance characteristics</code> بتاعة الـ <code>switch</code> statement في C#.</p>
+<p>🤔 <strong>Why is this important to know?</strong></p>
+<p>فهمك للنقط دي بيخليك <code>developer</code> أفضل. مش بس بتعرف تكتب كود، لكن بتعرف تكتب كود <code>efficient</code> و <code>readable</code>، وده اللي بيميز الـ <code>professional developers</code>.</p>
+<p>بالتوفيق في مذاكرتك! 🚀</p>
+</body>
+</html>
